@@ -88,7 +88,7 @@ class ChinabotHandlers:
             return
 
         # 转发群管理命令不受限制
-        fwd_cmds = {'转发群', 'forward', 'fw'}
+        fwd_cmds = {'转发群', 'forward', 'fw', '黑名单', 'blacklist'}
 
         # 如果不是转发群命令，检查是否在转发群
         fwd_id = self.config.get('forward', {}).get('group_id', 0)
