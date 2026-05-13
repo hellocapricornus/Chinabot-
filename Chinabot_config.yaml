@@ -1,6 +1,6 @@
 admin:
   colleagues: []
-  owner_id: 7823085248
+  owner_id: 7981317360
 business_types:
 - aliases:
   - 补单
@@ -1709,13 +1709,13 @@ countries:
 database:
   path: Chinabot_data/Chinabot_data.db
 forward:
-  enabled: true
-  group_id: 5281299027
-  pinned_message_id: 16830
+  enabled: false
+  group_id: 0
+  pinned_message_id: 0
 logging:
   file: Chinabot_data/Chinabot_logs/bot.log
   level: INFO
 telegram:
-  api_hash: 835350a8df767ddeb67066e9f8ee53fd
-  api_id: 30859910
+  api_hash: 28e543e71117bdfe3708595d584cf41e
+  api_id: 39566357
   session_name: chinabot_session
