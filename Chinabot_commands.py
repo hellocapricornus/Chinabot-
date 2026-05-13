@@ -28,6 +28,7 @@ class ChinabotCommands:
             '更新置顶': self._refresh_pin, 'refresh': self._refresh_pin,
             '删除报价': self._del_quote, 'del': self._del_quote,
             '历史报价': self._history, 'history': self._history,
+            '黑名单': self._blacklist, 'blacklist': self._blacklist,
         }
         self._aliases = {
             '同事': ['同事','colleague','cl'],
@@ -109,6 +110,8 @@ class ChinabotCommands:
     **📢 转发群**
     `/转发群 set` — 设置当前群为转发群
     `/转发群 remove` — 取消转发群
+    `/黑名单 add id` — 当前群不监听
+    `/黑名单 remove id` — 恢复监听
     `/转发群 info` — 查看转发群信息
 
     **🌍 国家管理**
@@ -403,3 +406,26 @@ class ChinabotCommands:
             p = f"单笔{fee}" if fee > 0 else f"{rate}/{ex}"
             lines.append(f"• [{d} {t}] {r.get('group_name', '')}: {p}")
         return '\n'.join(lines)
+
+    async def _blacklist(self, uid, args, cid, rf) -> str:
+        if len(args) < 2:
+            return "❌ 用法: /黑名单 add 群ID 或 /黑名单 remove 群ID"
+        act = args[0].lower()
+        gid = int(args[1].replace('-', ''))
+
+        if act == 'add':
+            self.db.remove_monitored_group(gid)
+            return f"✅ 群 {gid} 已加入黑名单，不再监听"
+        elif act == 'remove':
+            try:
+                from telethon.tl.functions.channels import GetFullChannelRequest
+                chat = await self.client.get_entity(gid)
+                full = await self.client(GetFullChannelRequest(chat))
+                cnt = full.full_chat.participants_count or 0
+                name = getattr(chat, 'title', '未知')
+            except:
+                cnt = 0
+                name = '未知'
+            self.db.add_monitored_group(gid, name, cnt)
+            return f"✅ 群 {gid} ({name}) 已恢复监听"
+        return "❌ 用法: /黑名单 add 群ID 或 /黑名单 remove 群ID"
